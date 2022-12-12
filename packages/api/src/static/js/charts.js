@@ -1,15 +1,15 @@
 let req = new XMLHttpRequest();
-req.open("GET", `https://lilo.northernsi.de/server/${/[^/]*$/.exec(document.location.href)[0]}/stats?size=1920`, true);
+req.open("GET", `https://lilo.northernsi.de/server/${/[^/]*$/.exec(document.location.href)[0]}/stats?size=640`, true);
 
 req.onload = () => {
     const stats = JSON.parse(req.responseText);
     let playerCount = [],
     times = [];
 
-    // 1920 statistic entries = 24 hours
-    for (let i = 1; i <= 1920; i++) {
-        playerCount.push(stats[stats.length - 1921 + i].online);
-        times.push(stats[stats.length - 1921 + i].time);
+    // 640 statistic entries = 8 hours
+    for (let i = 1; i <= 640; i++) {
+        playerCount.push(stats[stats.length - 641 + i].online);
+        times.push(stats[stats.length - 641 + i].time);
     }
 
     let options = {
