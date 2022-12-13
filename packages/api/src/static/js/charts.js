@@ -4,7 +4,7 @@ req.open("GET", `https://lilo.northernsi.de/server/${/[^/]*$/.exec(document.loca
 req.onload = () => {
     const stats = JSON.parse(req.responseText);
     let playerCount = [],
-    times = [];
+        times = [];
 
     // 720 statistic entries = 12 hours
     for (let i = 1; i <= 720; i++) {
