@@ -6,10 +6,10 @@ req.onload = () => {
     let playerCount = [],
     times = [];
 
-    // 640 statistic entries = 8 hours
-    for (let i = 1; i <= 640; i++) {
-        playerCount.push(stats[stats.length - 641 + i].online);
-        times.push(stats[stats.length - 641 + i].time);
+    // 720 statistic entries = 12 hours
+    for (let i = 1; i <= 720; i++) {
+        playerCount.push(stats[stats.length - 721 + i].online);
+        times.push(stats[stats.length - 721 + i].time);
     }
 
     let options = {
