@@ -12,9 +12,7 @@ export const discordCallback = async (req: any, res: any): Promise<any> => {
     const code = req.query.code as string;
 
     if (!code)
-        return await res.status(500).json({
-            "status": "error"
-        });
+        return res.status(500).json({"status": 500});
 
     try {
         const formData = new URLSearchParams({
@@ -33,9 +31,7 @@ export const discordCallback = async (req: any, res: any): Promise<any> => {
 
         const {access_token} = response.data;
         if (!response.data)
-            return res.status(500).json({
-                "status": 500
-            });
+            return res.status(500).json({"status": 500});
 
         const userResponse = await Axios.get("https://discord.com/api/v8/users/@me", {
             headers: {
@@ -44,7 +40,11 @@ export const discordCallback = async (req: any, res: any): Promise<any> => {
         });
 
         const {id} = userResponse.data,
-            accessTokens = JSON.parse(await client.hGet(`discord:${id}`, "access_tokens") || "[]"),
+            allowedUsers = JSON.parse(await client.get("discord:admins") || "[]");
+        if (!allowedUsers.includes(id))
+            return res.status(401).send({"status": 401});
+
+        const accessTokens = JSON.parse(await client.hGet(`discord:${id}`, "access_tokens") || "[]"),
             tokenSecret = Crypto.randomBytes(8).toString("hex").slice(0, 2048),
             accessToken = await JWT.sign({user_id: id}, tokenSecret);
         accessTokens.push({"accessToken": accessToken, "tokenSecret": tokenSecret});
@@ -58,8 +58,6 @@ export const discordCallback = async (req: any, res: any): Promise<any> => {
         res.redirect(`https://lilo.northernsi.de/blog/create`);
     } catch (err) {
         console.log(err);
-        return res.status(500).send({
-            "status": 500
-        });
+        return res.status(500).json({"status": 500});
     }
 };

@@ -30,14 +30,14 @@ app.get("/server/:address/stats", async function (req: Request, res: Response) {
 
 app.get("/blog/create", async function (req: Request, res: Response) {
     if (!await isLoggedIn(req))
-        return res.send({"status": 401});
+        return res.status(401).send({"status": 401});
 
     return res.send(createBlogHTML);
 });
 
 app.post("/blog/post", Express.json(), async function (req: Request, res: Response) {
     if (!await isLoggedIn(req))
-        return res.send({"status": 401});
+        return res.status(401).send({"status": 401});
 
     await postBlog(req, res);
 });
@@ -56,10 +56,10 @@ app.get("/auth/discordCallback", async function (req: Request, res: Response) {
 
 app.get("/logout", async function (req: Request, res: Response) {
     if (!req.cookies.id || !req.cookies.access_token)
-        return res.send({"status": 401});
+        return res.status(401).send({"status": 401});
 
     if (!await client.exists(`discord:${req.cookies.id}`))
-        return res.end({"status": 404});
+        return res.status(404).send({"status": 404});
 
     res.cookie("id", "", {maxAge: 0});
     res.cookie("access_token", "", {maxAge: 0});

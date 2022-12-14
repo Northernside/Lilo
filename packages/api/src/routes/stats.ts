@@ -25,5 +25,5 @@ export const stats = async (req: Request, res: Response) => {
     if (result)
         return res.send(result);
 
-    return res.status(500).send({"status": 500});
+    return res.status(500).json({"status": 500});
 }
