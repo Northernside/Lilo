@@ -20,7 +20,7 @@ export const discordCallback = async (req: any, res: any): Promise<any> => {
             client_secret: process.env.DISCORD_OAUTH_CLIENT_SECRET,
             grant_type: "authorization_code",
             code: code,
-            redirect_uri: `http://localhost:3000/auth/discordCallback`
+            redirect_uri: `https://lilo.northernsi.de/auth/discordCallback`
         });
 
         const response = await Axios.post("https://discord.com/api/v8/oauth2/token", formData.toString(), {
@@ -55,7 +55,7 @@ export const discordCallback = async (req: any, res: any): Promise<any> => {
         res.cookie("id", id, {expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 365))});
         res.cookie("access_token", accessToken, {expires: new Date(Date.now() + (1000 * 60 * 60 * 24 * 365))});
 
-        res.redirect(`http://localhost:3000/blog/create`);
+        res.redirect(`https://lilo.northernsi.de/blog/create`);
     } catch (err) {
         console.log(err);
         return res.status(500).json({"status": 500});
