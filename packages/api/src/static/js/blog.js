@@ -19,17 +19,18 @@ req.onerror = () => {
 }
 
 function convertTime(unixTimestamp) {
+    if (unixTimestamp == undefined)
+        return;
+
     let date = new Date(unixTimestamp),
         amPM = (date.getHours() > 12 && date.getHours() <= 23 ? "PM" : "AM"),
-        hour = String((date.getHours() + 24) % 12),
-        dateString =
-            `${(String(date.getMonth() + 1).length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1)}/${(String(
-                date.getDate()).length === 1 ? `0${date.getDate()}` : date.getDate())}/${date
-                .getFullYear()} ${`${hour.length === 1 ? `0${hour}` : hour}` || 12}:${(String(date.getMinutes()).length === 1)
-                ? `0${date.getMinutes()}` : date.getMinutes()}:${(String(date.getSeconds()).length === 1
-                ? `0${date.getSeconds()}` : date.getSeconds())} ${amPM}`;
+        hour = String((date.getHours() + 24) % 12);
 
-    document.querySelector(".time").innerText = dateString;
+    document.querySelector(".time").innerText = `${(String(date.getMonth() + 1).length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1)}/${(String(
+        date.getDate()).length === 1 ? `0${date.getDate()}` : date.getDate())}/${date
+        .getFullYear()} ${`${hour.length === 1 ? `0${hour}` : hour}` || 12}:${(String(date.getMinutes()).length === 1)
+        ? `0${date.getMinutes()}` : date.getMinutes()}:${(String(date.getSeconds()).length === 1
+        ? `0${date.getSeconds()}` : date.getSeconds())} ${amPM}`;
 }
 
 function createBlog(title, message) {
