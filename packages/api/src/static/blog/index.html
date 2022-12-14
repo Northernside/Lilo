@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{pretty_name} - Lilo</title>
-    <link rel="stylesheet" href="../css/server.css" type="text/css">
+    <title>{server_name} - Lilo</title>
+    <link rel="stylesheet" href="../css/blog.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
     <link rel="icon" href="{favicon}">
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="Lilo - {pretty_name}">
+    <meta name="title" content="Lilo - Quick Server Lookup">
     <meta name="description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lilo.northernsi.de/">
-    <meta property="og:title" content="Lilo - {pretty_name}">
+    <meta property="og:title" content="Lilo - Quick Server Lookup">
     <meta property="og:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="og:image" content="https://lilo.northernsi.de/image/metabg.jpeg">
@@ -23,7 +23,7 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lilo.northernsi.de/">
-    <meta property="twitter:title" content="Lilo - {pretty_name}">
+    <meta property="twitter:title" content="Lilo - Quick Server Lookup">
     <meta property="twitter:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="twitter:image" content="https://lilo.northernsi.de/image/metabg.jpeg">
@@ -39,43 +39,29 @@
 <div class="search-container">
     <div class="menu-searchbar searchbar">
         <form
-            onsubmit="window.location.href = `${document.getElementById('searchInput').value}`; return false;">
+            onsubmit="window.location.href = `../server/${document.getElementById('searchInput').value}`; return false;">
             <div id="searchbar">
                 <input type="text" id="searchInput" autocomplete="off" placeholder="Search">
             </div>
         </form>
     </div>
 </div>
-<div class="server-container">
-    <div class="server">
-        <div class="favicon">
-            <img src="{favicon}" width="64px" alt="Server Favicon">
-        </div>
+<div class="case-container">
+    <div class="case">
         <div class="align-right">
-            <div class="server-header">
-                <h3>{server_name}</h3>
-                <p>{player_count}</p>
+            <div class="affected-header">
+                <h3>Affected servers</h3>
             </div>
-            <p>{motd}</p>
+            <p>{affected_servers}</p>
         </div>
     </div>
 </div>
 <div class="info-container">
     <div class="info">
         <p>
-            Latency: {latency}
-            <br>
-            Version: {version}{version_number}
+            {downtime_text}
         </p>
     </div>
-</div>
-<div class="chart-container">
-    <div id="chart"></div>
-    <script type="text/javascript" src="../js/charts.js"></script>
-    <script>
-        let input = document.getElementById("searchInput");
-        input.focus();
-    </script>
 </div>
 </body>
 </html>
