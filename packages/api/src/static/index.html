@@ -2,9 +2,7 @@
 <html>
 <head>
     <title>Lilo - Quick Server Lookup</title>
-    <link rel="stylesheet" href="css/server.css" type="text/css">
-    <link rel="stylesheet" href="css/landing.css" type="text/css">
-    <script src="https://kit.fontawesome.com/fa7540a0b2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/general.css" type="text/css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
 
     <!-- Primary Meta Tags -->
@@ -29,30 +27,29 @@
     <meta property="twitter:image" content="https://lilo.northernsi.de/image/metabg.jpeg">
 </head>
 <body>
-<div class="container-fluid landing-background">
+<div class="general-background">
     <div class="pink-bg-bubble"></div>
     <div class="yellow-bg-bubble"></div>
     <div class="blue-bg-bubble"></div>
     <div class="green-bg-bubble"></div>
     <div class="purple-bg-bubble"></div>
 </div>
-<div class="container content">
+<div class="page">
     <div class="title">
-        <h2>Lilo</h2>
-        <p>The only tool you'll ever need to search through a database containing thousands of Minecraft
-            servers</p>
-        <div class="menu-searchbar searchbar">
-            <form
-                onsubmit="window.location.href = `server/${document.getElementById('searchInput').value}`; return false;">
-                <div id="searchbar">
-                    <input type="text" id="searchInput" autocomplete="off" placeholder="Search">
-                </div>
-                <script>
-                    let input = document.getElementById("searchInput");
-                    input.focus();
-                </script>
-            </form>
-        </div>
+        <p class="header">Lilo</p>
+        <p class="subtitle">The only tool you'll ever need to search through a database containing thousands of
+            Minecraft servers</p>
+    </div>
+    <div class="bar">
+        <form onsubmit="window.location.href = `${document.getElementsByClassName('input')[0].value}`; return false;">
+            <div class="bar-input">
+                <input type="text" class="input" autocomplete="off" placeholder="Search">
+            </div>
+            <script>
+                let input = document.getElementsByClassName("input")[0];
+                input.focus();
+            </script>
+        </form>
     </div>
 </div>
 </body>

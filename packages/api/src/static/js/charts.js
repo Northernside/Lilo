@@ -21,8 +21,11 @@ req.onload = () => {
             height: 300,
             width: 400,
             type: "area",
-            foreColor: "#fff",
-            parentHeightOffset: 60
+            foreColor: "#fff"
+        },
+        theme: {
+            mode: "dark",
+            palette: "palette1"
         },
         dataLabels: {
             enabled: false
@@ -53,8 +56,19 @@ req.onload = () => {
         }
     };
 
-    let chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render();
+    switch (req.status) {
+        case 200:
+            let chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
+            break;
+        default:
+            document.querySelector("#chart").innerHTML += "No data available";
+            break;
+    }
+}
+
+req.onerror = () => {
+    document.querySelector("#chart").innerHTML += "No data available";
 }
 
 req.send(null);

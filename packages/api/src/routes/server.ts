@@ -40,7 +40,7 @@ export const server = async (req: Request, res: Response) => {
         serverHTML = serverHTML.replace(/{version}/g, !serverData.version.name ? serverData.version : serverData.version.name);
         serverHTML = serverHTML.replace(/{version_number}/g, !serverData.version.protocol ? "" : ` (${serverData.version.protocol})`);
         serverHTML = serverHTML.replace(/{player_count}/g, !serverData.players ? "0/0" : `${serverData.players.online}/${serverData.players.max}`);
-        res.send(serverHTML);
+        return res.send(serverHTML);
 
         let statusServers = JSON.parse(await client.get("status") || "[]");
         if (!statusServers.includes(`${host}:${port}`)) {

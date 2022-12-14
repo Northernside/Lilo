@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{pretty_name} - Lilo</title>
+    <title>Blog - Lilo</title>
     <link rel="stylesheet" href="../css/general.css" type="text/css">
     <link rel="stylesheet" href="../css/blog.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -38,12 +38,27 @@
     <div class="purple-bg-bubble"></div>
 </div>
 <div class="page">
-    <div class="container text-align-left">
-        <div class="title">
-            <p class="header">{title}</p>
-            <span>{message}</span>
-        </div>
+    <div class="bar">
+        <form>
+            <div class="bar-input">
+                <input type="text" class="input" autocomplete="off" placeholder="Title">
+            </div>
+            <script>
+                let input = document.getElementsByClassName("input")[0];
+                input.focus();
+            </script>
+        </form>
     </div>
+    <div class="bar">
+        <form>
+            <div class="bar-input">
+                <textarea class="input" autocomplete="off" placeholder="What happened?"></textarea>
+            </div>
+        </form>
+    </div>
+    <input id="submitBtn" type="button" value="Submit"
+           onclick="createBlog(document.getElementsByClassName('input')[0].value, document.getElementsByClassName('input')[1].value);">
+    <script type="text/javascript" src="../js/blog.js"></script>
 </div>
 </body>
 </html>
