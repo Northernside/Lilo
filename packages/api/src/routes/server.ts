@@ -11,7 +11,7 @@ export const server = async (req: Request, res: Response) => {
 
     let serverData = JSON.parse(await client.hGet(`server:${host}:${port}`, "data"));
     if (port > 65535 || isNaN(port))
-        return res.status(404).send({"status": 404});
+        return res.status(404).send(FS.readFileSync(`${__dirname}/../static/404.html`, "utf-8"));
 
     if (serverData)
         return await displayHTML();

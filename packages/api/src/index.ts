@@ -59,7 +59,7 @@ app.get("/logout", async function (req: Request, res: Response) {
         return res.status(401).send({"status": 401});
 
     if (!await client.exists(`discord:${req.cookies.id}`))
-        return res.status(404).send({"status": 404});
+        return res.status(404).send(FS.readFileSync(`${__dirname}/../static/404.html`, "utf-8"));
 
     res.cookie("id", "", {maxAge: 0});
     res.cookie("access_token", "", {maxAge: 0});

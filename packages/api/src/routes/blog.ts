@@ -7,7 +7,7 @@ export const blog = async (req: Request, res: Response) => {
     const blog = JSON.parse(await client.get(`blog:${id}`));
 
     if (!blog)
-        return res.status(404).send({"status": 404});
+        return res.status(404).send(FS.readFileSync(`${__dirname}/../static/404.html`, "utf-8"));
 
     let blogHTML = FS.readFileSync(`${__dirname}/../static/blog/index.html`, "utf-8");
     blogHTML = blogHTML.replace(/{title}/g, blog.title);
