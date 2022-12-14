@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{pretty_name} - Lilo</title>
+    <title>{title}</title>
     <link rel="stylesheet" href="../css/general.css" type="text/css">
     <link rel="stylesheet" href="../css/blog.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -9,25 +9,25 @@
     <link rel="icon" href="{favicon}">
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="{pretty_name} - Lilo">
+    <meta name="title" content="{title}">
     <meta name="description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://lilo.northernsi.de/">
-    <meta property="og:title" content="{pretty_name} - Lilo">
+    <meta property="og:url" content="http://localhost:3000/">
+    <meta property="og:title" content="{title}">
     <meta property="og:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
-    <meta property="og:image" content="https://lilo.northernsi.de/image/metabg.jpeg">
+    <meta property="og:image" content="http://localhost:3000/image/metabg.jpeg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://lilo.northernsi.de/">
-    <meta property="twitter:title" content="{pretty_name} - Lilo">
+    <meta property="twitter:url" content="http://localhost:3000/">
+    <meta property="twitter:title" content="{title}">
     <meta property="twitter:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
-    <meta property="twitter:image" content="https://lilo.northernsi.de/image/metabg.jpeg">
+    <meta property="twitter:image" content="http://localhost:3000/image/metabg.jpeg">
 </head>
 <body>
 <div class="container-fluid landing-background">
@@ -41,6 +41,11 @@
     <div class="container text-align-left">
         <div class="title">
             <p class="header">{title}</p>
+            <p class="time">Could not fetch publishing-date</p>
+            <script type="text/javascript" src="../js/blog.js"></script>
+            <script>
+                convertTime({time});
+            </script>
             <span>{message}</span>
         </div>
     </div>

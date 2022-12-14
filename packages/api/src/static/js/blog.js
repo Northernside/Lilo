@@ -1,5 +1,5 @@
 let req = new XMLHttpRequest();
-req.open("POST", "https://lilo.northernsi.de/blog/post", true);
+req.open("POST", "http://localhost:3000/blog/post", true);
 req.setRequestHeader("Accept", "application/json");
 req.setRequestHeader("Content-Type", "application/json");
 
@@ -18,9 +18,24 @@ req.onerror = () => {
     alert("An error occurred.");
 }
 
+function convertTime(unixTimestamp) {
+    let date = new Date(unixTimestamp),
+        amPM = (date.getHours() > 12 && date.getHours() <= 23 ? "PM" : "AM"),
+        hour = String((date.getHours() + 24) % 12),
+        dateString =
+            `${(String(date.getMonth() + 1).length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1)}/${(String(
+                date.getDate()).length === 1 ? `0${date.getDate()}` : date.getDate())}/${date
+                .getFullYear()} ${`${hour.length === 1 ? `0${hour}` : hour}` || 12}:${(String(date.getMinutes()).length === 1)
+                ? `0${date.getMinutes()}` : date.getMinutes()}:${(String(date.getSeconds()).length === 1
+                ? `0${date.getSeconds()}` : date.getSeconds())} ${amPM}`;
+
+    document.querySelector(".time").innerText = dateString;
+}
+
 function createBlog(title, message) {
     req.send(JSON.stringify({
         "title": title,
-        "message": message
+        "message": message,
+        "time": Date.now()
     }));
 }
