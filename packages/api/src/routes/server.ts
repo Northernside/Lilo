@@ -27,7 +27,7 @@ export const server = async (req: Request, res: Response) => {
             await client.hSet(serverStr, "data", JSON.stringify(statusLegacyResult));
             return await displayHTML();
         }).catch(() => {
-            return res.status(404).send({"status": 404});
+            return res.status(404).send(FS.readFileSync(`${__dirname}/../static/404.html`, "utf-8"));
         });
     });
 
