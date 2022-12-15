@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Blog - Lilo</title>
+    <title>{title}</title>
     <link rel="stylesheet" href="../css/general.css" type="text/css">
     <link rel="stylesheet" href="../css/blog.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -9,14 +9,14 @@
     <link rel="icon" href="{favicon}">
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="Blog - Lilo">
+    <meta name="title" content="{title}">
     <meta name="description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lilo.northernsi.de/">
-    <meta property="og:title" content="Blog - Lilo">
+    <meta property="og:title" content="{title}">
     <meta property="og:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="og:image" content="https://lilo.northernsi.de/image/metabg.jpeg">
@@ -24,7 +24,7 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lilo.northernsi.de/">
-    <meta property="twitter:title" content="Blog - Lilo">
+    <meta property="twitter:title" content="{title}">
     <meta property="twitter:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="twitter:image" content="https://lilo.northernsi.de/image/metabg.jpeg">
@@ -40,8 +40,13 @@
 <div class="page">
     <div class="container text-align-left">
         <div class="title">
-            <p class="header">Lilo Blogs</p>
-            <span>Lilo Blogs are a way to post & spread messages/information about recent Minecraft server/network outages and their reason.</span>
+            <p class="header">{title}</p>
+            <p class="time"></p>
+            <script type="text/javascript" src="../js/blog.js"></script>
+            <script>
+                convertTime({time});
+            </script>
+            <span>{message}</span>
         </div>
     </div>
 </div>

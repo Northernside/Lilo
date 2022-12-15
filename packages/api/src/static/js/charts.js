@@ -65,7 +65,7 @@ req.onload = () => {
             chart.render();
             break;
         default:
-            document.querySelector("#chart").innerHTML += "No data available";
+            document.querySelector("#chart").innerHTML = "No data available";
             break;
     }
 }

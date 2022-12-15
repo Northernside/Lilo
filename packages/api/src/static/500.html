@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Blog - Lilo</title>
-    <link rel="stylesheet" href="../css/general.css" type="text/css">
-    <link rel="stylesheet" href="../css/blog.css" type="text/css">
+    <title>500 - Lilo</title>
+    <link rel="stylesheet" href="/css/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/server.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
     <link rel="icon" href="{favicon}">
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="Blog - Lilo">
+    <meta name="title" content="Lilo - 500">
     <meta name="description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lilo.northernsi.de/">
-    <meta property="og:title" content="Blog - Lilo">
+    <meta property="og:title" content="Lilo - 500">
     <meta property="og:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="og:image" content="https://lilo.northernsi.de/image/metabg.jpeg">
@@ -24,7 +24,7 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lilo.northernsi.de/">
-    <meta property="twitter:title" content="Blog - Lilo">
+    <meta property="twitter:title" content="Lilo - 500">
     <meta property="twitter:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="twitter:image" content="https://lilo.northernsi.de/image/metabg.jpeg">
@@ -38,11 +38,30 @@
     <div class="purple-bg-bubble"></div>
 </div>
 <div class="page">
-    <div class="container text-align-left">
-        <div class="title">
-            <p class="header">Lilo Blogs</p>
-            <span>Lilo Blogs are a way to post & spread messages/information about recent Minecraft server/network outages and their reason.</span>
+    <div class="container">
+        <div class="favicon">
+            <img
+                src="{favicon}"
+                width="64px" alt="Server Favicon">
         </div>
+        <div class="align-right">
+            <div class="server-header">
+                <h3>500 - Internal Server Error</h3>
+            </div>
+            <p>Please contact <a href="mailto:lilo@northernsi.de">lilo@northernsi.de</a></p>
+        </div>
+    </div>
+    <div class="bar">
+        <form
+            onsubmit="window.location.href = `/server/${document.getElementsByClassName('input')[0].value}`; return false;">
+            <div class="bar-input">
+                <input type="text" class="input" autocomplete="off" placeholder="Search">
+            </div>
+            <script>
+                let input = document.getElementsByClassName("input")[0];
+                input.focus();
+            </script>
+        </form>
     </div>
 </div>
 </body>

@@ -1,3 +1,4 @@
+document.querySelector(".time").innerText = "Fetching creation date...";
 let req = new XMLHttpRequest();
 req.open("POST", "https://lilo.northernsi.de/blog/post", true);
 req.setRequestHeader("Accept", "application/json");
@@ -20,7 +21,7 @@ req.onerror = () => {
 
 function convertTime(unixTimestamp) {
     if (unixTimestamp == undefined)
-        return;
+        return document.querySelector(".time").innerText = "Could not fetch publishing-date";
 
     let date = new Date(unixTimestamp),
         amPM = (date.getHours() > 12 && date.getHours() <= 23 ? "PM" : "AM"),

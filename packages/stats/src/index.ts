@@ -1,6 +1,7 @@
 import {client} from "@core/redis";
 import {app} from "@core/api";
 import {status, statusLegacy} from "minecraft-server-util";
+
 import {startMonitoring} from "./utils/downtime";
 import {handle, resolveStatus} from "./utils/dataHandling";
 

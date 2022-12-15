@@ -1,9 +1,8 @@
+import {defaultServerIcon, notFoundHTML} from "@core/api";
+import {client} from "@core/redis";
 import {Request, Response} from "express";
 import {status, statusLegacy} from "minecraft-server-util";
-import {client} from "@core/redis";
 import FS from "node:fs";
-
-const defaultServerIcon = require("../../../../settings.json").default_icon;
 
 export const server = async (req: Request, res: Response) => {
     let host = req.params.address.split(":")[0].toLowerCase(),
@@ -11,7 +10,7 @@ export const server = async (req: Request, res: Response) => {
 
     let serverData = JSON.parse(await client.hGet(`server:${host}:${port}`, "data"));
     if (port > 65535 || isNaN(port))
-        return res.status(404).send(FS.readFileSync(`${__dirname}/../static/404.html`, "utf-8"));
+        return res.status(404).send(notFoundHTML);
 
     if (serverData)
         return await displayHTML();
@@ -27,12 +26,19 @@ export const server = async (req: Request, res: Response) => {
             await client.hSet(serverStr, "data", JSON.stringify(statusLegacyResult));
             return await displayHTML();
         }).catch(() => {
-            return res.status(404).send(FS.readFileSync(`${__dirname}/../static/404.html`, "utf-8"));
+            return res.status(404).send(notFoundHTML);
         });
     });
 
     async function displayHTML() {
-        let serverHTML = FS.readFileSync(`${__dirname}/../static/server/index.html`, "utf-8");
+        let statusServers = JSON.parse(await client.get("status") || "[]"),
+            serverHTML = FS.readFileSync(`${__dirname}/../static/server/view.html`, "utf-8");
+
+        if (!statusServers.includes(`${host}:${port}`)) {
+            statusServers.push(`${host}:${port}`);
+            await client.set("status", JSON.stringify(statusServers));
+        }
+
         serverHTML = serverHTML.replace(/{server_name}/g, `${host}${port != 25565 ? `:${port}` : ""}`);
         serverHTML = serverHTML.replace(/{motd}/g, !serverData.motd.html ? serverData.motd : serverData.motd.html.replace(/\n/g, "<br>"));
         serverHTML = serverHTML.replace(/{favicon}/g, serverData.favicon ? serverData.favicon : defaultServerIcon);
@@ -41,11 +47,5 @@ export const server = async (req: Request, res: Response) => {
         serverHTML = serverHTML.replace(/{version_number}/g, !serverData.version.protocol ? "" : ` (${serverData.version.protocol})`);
         serverHTML = serverHTML.replace(/{player_count}/g, !serverData.players ? "0/0" : `${serverData.players.online}/${serverData.players.max}`);
         return res.send(serverHTML);
-
-        let statusServers = JSON.parse(await client.get("status") || "[]");
-        if (!statusServers.includes(`${host}:${port}`)) {
-            statusServers.push(`${host}:${port}`);
-            await client.set("status", JSON.stringify(statusServers));
-        }
     }
 }

@@ -79,7 +79,6 @@ body {
     height: 40px;
     outline: none;
     width: 400px;
-    transition: 1s;
 }
 
 .bar-input input:focus {
