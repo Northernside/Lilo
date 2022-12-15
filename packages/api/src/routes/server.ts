@@ -43,7 +43,8 @@ export const server = async (req: Request, res: Response) => {
         serverHTML = serverHTML.replace(/{motd}/g, !serverData.motd.html ? serverData.motd : serverData.motd.html.replace(/\n/g, "<br>"));
         serverHTML = serverHTML.replace(/{favicon}/g, serverData.favicon ? serverData.favicon : defaultServerIcon);
         serverHTML = serverHTML.replace(/{latency}/g, !serverData.roundTripLatency ? "0ms" : `${serverData.roundTripLatency}ms`);
-        serverHTML = serverHTML.replace(/{version}/g, !serverData.version.name ? serverData.version : serverData.version.name);
+        serverHTML = serverHTML.replace(/{version}/g, !serverData.version.name ? serverData.version.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+            : serverData.version.name.replace(/</g, "&lt;").replace(/>/g, "&gt;"));
         serverHTML = serverHTML.replace(/{version_number}/g, !serverData.version.protocol ? "" : ` (${serverData.version.protocol})`);
         serverHTML = serverHTML.replace(/{player_count}/g, !serverData.players ? "0/0" : `${serverData.players.online}/${serverData.players.max}`);
         return res.send(serverHTML);

@@ -48,7 +48,9 @@
                 <p>{player_count}</p>
             </div>
             <p class="motd">{motd}</p>
-            <p class="small-info">running on {version} {version_number} with a latency of {latency}</p>
+            <p class="small-info">
+                running on <span>{version}</span> <span>{version_number}</span> with a latency <span>{latency}</span>
+            </p>
         </div>
     </div>
     <div class="container">
@@ -56,7 +58,8 @@
         <script type="text/javascript" src="../js/charts.js"></script>
     </div>
     <div class="bar">
-        <form onsubmit="window.location.href = `/server/${document.getElementsByClassName('input')[0].value}`; return false;">
+        <form
+            onsubmit="window.location.href = `/server/${document.getElementsByClassName('input')[0].value}`; return false;">
             <div class="bar-input">
                 <input type="text" class="input" autocomplete="off" placeholder="Search">
             </div>
