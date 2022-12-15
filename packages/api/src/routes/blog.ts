@@ -11,8 +11,8 @@ export const blog = async (req: Request, res: Response) => {
         return res.status(404).send(notFoundHTML);
 
     let blogHTML = FS.readFileSync(`${__dirname}/../static/blog/view.html`, "utf-8");
-    blogHTML = blogHTML.replace(/{title}/g, blog.title);
+    blogHTML = blogHTML.replace(/{title}/g, blog.title.replace(/</g, "&lt;").replace(/>/g, "&gt;"));
     blogHTML = blogHTML.replace(/{time}/g, blog.time);
-    blogHTML = blogHTML.replace(/{message}/g, blog.message);
+    blogHTML = blogHTML.replace(/{message}/g, blog.message.replace(/</g, "&lt;").replace(/>/g, "&gt;"));
     return res.send(blogHTML);
 }

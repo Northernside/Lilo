@@ -37,15 +37,15 @@ app.get("/server/:address/stats", async function (req: Request, res: Response) {
     await stats(req, res);
 });
 
-app.get("/blog/:id", async function (req: Request, res: Response) {
-    await blog(req, res);
-});
-
 app.get("/blog/create", async function (req: Request, res: Response) {
     if (!await isLoggedIn(req))
         return res.status(401).send(unauthorizedHTML);
 
     return res.send(createBlogHTML);
+});
+
+app.get("/blog/:id", async function (req: Request, res: Response) {
+    await blog(req, res);
 });
 
 app.post("/blog/post", Express.json(), async function (req: Request, res: Response) {

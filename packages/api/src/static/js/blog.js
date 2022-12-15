@@ -1,6 +1,5 @@
-document.querySelector(".time").innerText = "Fetching creation date...";
 let req = new XMLHttpRequest();
-req.open("POST", "https://lilo.northernsi.de/blog/post", true);
+req.open("POST", "http://localhost:3000/blog/post", true);
 req.setRequestHeader("Accept", "application/json");
 req.setRequestHeader("Content-Type", "application/json");
 
