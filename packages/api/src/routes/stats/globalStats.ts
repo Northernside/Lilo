@@ -8,7 +8,7 @@ export const globalStats = async (req: Request, res: Response) => {
         monitoredServers = JSON.parse(await client.get("status") || "[]"),
         offlineServers = JSON.parse(await client.get("offline") || "[]"),
         blogPosts = await client.keys("blog:*"),
-        registeredUsers = await client.keys("discord:*");
+        registeredUsers = await client.keys("discord:[^admins]*");
 
     if (!servers || !monitoredServers || !offlineServers || !blogPosts || !registeredUsers)
         return res.status(500).send(internalServerErrorHTML);
