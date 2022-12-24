@@ -23,7 +23,7 @@ body {
     margin: 0;
 }
 
-.page:not(.serverlist, .blog) {
+.page:not(.serverlist) {
     color: white;
     text-align: center;
 
@@ -38,7 +38,7 @@ body {
     z-index: 9999;
 }
 
-.serverlist, .blog {
+.serverlist {
     color: white;
     text-align: center;
 
@@ -48,10 +48,6 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-.blog {
-    height: 50vw;
 }
 
 .title .header {
