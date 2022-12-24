@@ -121,6 +121,10 @@ body {
     width: max-content;
 }
 
+.blog .container {
+    max-width: none;
+}
+
 a {
     text-decoration: none;
 }
