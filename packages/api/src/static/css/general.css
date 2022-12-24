@@ -126,11 +126,11 @@ a {
 }
 
 a:link {
-    color: unset;
+    color: #cfcfcf;
 }
 
 a:visited {
-    color: unset;
+    color: #cfcfcf;
 }
 
 a:hover {
