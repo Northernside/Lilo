@@ -23,7 +23,7 @@ body {
     margin: 0;
 }
 
-.page {
+.page:not(.serverlist) {
     color: white;
     text-align: center;
 
@@ -36,6 +36,18 @@ body {
     align-items: center;
 
     z-index: 9999;
+}
+
+.serverlist {
+    color: white;
+    text-align: center;
+
+    width: 100vw;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .title .header {

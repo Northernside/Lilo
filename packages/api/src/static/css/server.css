@@ -37,3 +37,20 @@
 .apexcharts-zoomable {
     background-color: unset !important;
 }
+
+.time-frame-selector {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 9px;
+}
+
+.time-frame-btn {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 4px 13px;
+    border-radius: 5px;
+}
+
+.active {
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: 2s;
+}

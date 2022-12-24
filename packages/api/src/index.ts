@@ -14,6 +14,9 @@ import {postBlog} from "./routes/blog/postBlog";
 import {callback} from "./routes/auth/callback";
 import {globalStats} from "./routes/stats/globalStats";
 import {featuredServer} from "./routes/landing/featuredServer";
+import {servers} from "./routes/serverlist/servers";
+import {muteServer} from "./routes/admin/muteServer";
+import {removeServer} from "./routes/admin/removeServer";
 
 dotenv.config();
 
@@ -22,7 +25,12 @@ export const createBlogHTML = FS.readFileSync(`${__dirname}/static/blog/create.h
     unauthorizedHTML = FS.readFileSync(`${__dirname}/static/401.html`, "utf-8").replace(/{favicon}/g, defaultServerIcon),
     notFoundHTML = FS.readFileSync(`${__dirname}/static/404.html`, "utf-8").replace(/{favicon}/g, defaultServerIcon),
     internalServerErrorHTML = FS.readFileSync(`${__dirname}/static/500.html`, "utf-8").replace(/{favicon}/g, defaultServerIcon),
+    adminHTML = FS.readFileSync(`${__dirname}/static/admin/view.html`, "utf-8"),
     indexHTML = FS.readFileSync(`${__dirname}/static/index.html`, "utf-8");
+
+app.get("*/view.html", async function (req: Request, res: Response) {
+    return res.status(404).send(notFoundHTML);
+});
 
 app.use(Express.static(`${__dirname}/static`));
 app.use(Cookies());
@@ -57,12 +65,37 @@ app.post("/blog/post", Express.json(), async function (req: Request, res: Respon
     await postBlog(req, res);
 });
 
-app.get("/stats", Express.json(), async function (req: Request, res: Response) {
+app.post("/mute", Express.json(), async function (req: Request, res: Response) {
+    if (!await isLoggedIn(req))
+        return res.status(401).send(unauthorizedHTML);
+
+    await muteServer(req, res);
+});
+
+app.post("/remove", Express.json(), async function (req: Request, res: Response) {
+    if (!await isLoggedIn(req))
+        return res.status(401).send(unauthorizedHTML);
+
+    await removeServer(req, res);
+});
+
+app.get("/stats", async function (req: Request, res: Response) {
     await globalStats(req, res);
 });
 
-app.get("/api/featuredServer", Express.json(), async function (req: Request, res: Response) {
+app.get("/admin", async function (req: Request, res: Response) {
+    if (!await isLoggedIn(req))
+        return res.status(401).send(unauthorizedHTML);
+
+    res.send(adminHTML);
+});
+
+app.get("/api/featuredServer", async function (req: Request, res: Response) {
     await featuredServer(req, res);
+});
+
+app.get("/api/servers", async function (req: Request, res: Response) {
+    await servers(req, res)
 });
 
 app.get("/auth/login", async function (req: Request, res: Response) {

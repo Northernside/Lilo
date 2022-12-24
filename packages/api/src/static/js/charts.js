@@ -1,11 +1,12 @@
 document.querySelector("#chart").innerHTML = "Loading data...";
 
-let req = new XMLHttpRequest();
+let req = new XMLHttpRequest(),
+    range = 12;
 
 let options = {
     series: [{
         name: "Players",
-        data: [1,2,3,5]
+        data: [1, 2, 3, 5]
     }],
     chart: {
         animations: {
@@ -31,7 +32,7 @@ let options = {
     },
     xaxis: {
         type: "datetime",
-        categories: [1,2,3,4]
+        categories: [1, 2, 3, 4]
     },
     tooltip: {
         x: {
@@ -50,14 +51,13 @@ let options = {
 };
 
 function runRequest() {
-    req.open("GET", `${/[^/]*$/.exec(document.location.href)[0]}/stats?size=640`, true)
+    req.open("GET", `${/[^/]*$/.exec(document.location.href)[0]}/stats?size=${range * 60}`, true)
 
     req.onload = () => {
         const stats = JSON.parse(req.responseText);
         let playerCount = [],
             times = [];
-
-        // 720 statistic entries = 12 hours
+        
         for (let i = 0; i < stats.length; i++) {
             playerCount.push(stats[i].online);
             times.push(stats[i].time);
@@ -86,7 +86,18 @@ function runRequest() {
     }
 
     req.send(null);
-    setTimeout(runRequest, 15000);
+    setTimeout(runRequest, 60000);
 }
 
 runRequest();
+
+function changeRange(newRange) {
+    range = newRange;
+
+    for (let element of document.getElementsByClassName("active"))
+        element.classList.remove("active");
+
+    document.getElementById(`${range}h`).classList.add("active");
+
+    runRequest();
+}
