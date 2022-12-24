@@ -1,10 +1,10 @@
 let mute = new XMLHttpRequest();
-mute.open("POST", `${/[^/]*$/.exec(document.location.href)[0]}/remove`, true);
+mute.open("POST", "/remove", true);
 mute.setRequestHeader("Accept", "application/json");
 mute.setRequestHeader("Content-Type", "application/json");
 
 let remove = new XMLHttpRequest();
-remove.open("POST", `${/[^/]*$/.exec(document.location.href)[0]}/remove`, true);
+remove.open("POST", "/remove", true);
 remove.setRequestHeader("Accept", "application/json");
 remove.setRequestHeader("Content-Type", "application/json");
 

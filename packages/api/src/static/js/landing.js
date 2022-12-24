@@ -1,7 +1,7 @@
 document.getElementsByClassName("server")[0].innerHTML = "Loading data...";
 
 let req = new XMLHttpRequest();
-req.open("GET", `${/[^/]*$/.exec(document.location.href)[0]}/api/featuredServer`, true);
+req.open("GET", "/api/featuredServer", true);
 
 req.onload = () => {
     const serverData = JSON.parse(req.responseText);
