@@ -94,7 +94,7 @@ function requestLoop() {
 
     setTimeout(function () {
         requestLoop();
-    }, 2000);
+    }, 60000);
 }
 
 function changeRange(newRange) {

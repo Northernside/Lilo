@@ -7,7 +7,7 @@ req.onload = () => {
     const serverData = JSON.parse(req.responseText);
 
     let serverHTML = `
-        <a href="/server/${serverData.server_name}">
+        <div onclick="document.location.href = '/server/${serverData.server_name}'" style="cursor: pointer;">
             <div class="favicon">
                 <img src="${serverData.favicon}" width="64px" alt="Server Favicon">
             </div>
