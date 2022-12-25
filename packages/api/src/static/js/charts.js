@@ -53,7 +53,7 @@ function runRequest() {
     options.series = [];
     options.xaxis.categories = [];
 
-    req.open("GET", `${/[^/]*$/.exec(document.location.href)[0].split(/[?#]/)[0]}/stats?size=${range * 60}`, true);
+    req.open("GET", `/server/${/[^/]*$/.exec(document.location.href)[0].split(/[?#]/)[0]}/stats?size=${range * 60}`, true);
     req.onload = () => {
         const stats = JSON.parse(req.responseText);
         let playerCount = [],

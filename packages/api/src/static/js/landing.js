@@ -1,7 +1,7 @@
 document.getElementsByClassName("server")[0].innerHTML = "Loading data...";
 
 let req = new XMLHttpRequest();
-req.open("GET", "/api/featuredServer", true);
+req.open("GET", "/api/server/random", true);
 
 req.onload = () => {
     const serverData = JSON.parse(req.responseText);

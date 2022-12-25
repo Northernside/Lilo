@@ -1,14 +1,30 @@
-let mute = new XMLHttpRequest();
-mute.open("POST", "/remove", true);
-mute.setRequestHeader("Accept", "application/json");
-mute.setRequestHeader("Content-Type", "application/json");
+function notifications(address, action) {
+    const req = new XMLHttpRequest();
+    req.open("POST", "/server/notifications", true);
+    req.setRequestHeader("Accept", "application/json");
+    req.setRequestHeader("Content-Type", "application/json");
 
-let remove = new XMLHttpRequest();
-remove.open("POST", "/remove", true);
-remove.setRequestHeader("Accept", "application/json");
-remove.setRequestHeader("Content-Type", "application/json");
+    req.onload = onLoad;
+    req.onerror = onError;
 
-mute.onload = () => {
+    req.send(JSON.stringify({
+        address: address,
+        action: action
+    }));
+}
+
+function deleteServer(address) {
+    const req = new XMLHttpRequest();
+    req.open("POST", "/server/delete", true);
+    req.setRequestHeader("Accept", "application/json");
+    req.setRequestHeader("Content-Type", "application/json");
+
+    req.send(JSON.stringify({
+        "address": address
+    }));
+}
+
+function onLoad() {
     switch (req.status) {
         case 200:
             window.location.reload(false);
@@ -20,36 +36,7 @@ mute.onload = () => {
     }
 }
 
-remove.onload = () => {
-    switch (req.status) {
-        case 200:
-            window.location.reload(false);
-            break;
-        default:
-            alert("An error occurred.");
-            window.location.reload(false);
-            break;
-    }
-}
-
-mute.onerror = () => {
+function onError() {
     alert("An error occurred.");
     window.location.reload(false);
-}
-
-remove.onerror = () => {
-    alert("An error occurred.");
-    window.location.reload(false);
-}
-
-function muteServer(address) {
-    mute.send(JSON.stringify({
-        "address": address
-    }));
-}
-
-function removeServer(address) {
-    remove.send(JSON.stringify({
-        "address": address
-    }));
 }

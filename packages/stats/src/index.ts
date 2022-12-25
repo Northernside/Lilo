@@ -8,6 +8,8 @@ import {handle, resolveStatus} from "./utils/dataHandling";
 
 dotenv.config();
 
+export let notifications = null;
+
 export const startService = async () => {
     await client.connect();
     app.listen(process.env.LILO_PORT);
@@ -17,6 +19,7 @@ export const startService = async () => {
         server: string;
 
     const loop = async function () {
+        notifications = JSON.parse(await client.get("notifications") || "[]");
         statusServers = JSON.parse(await client.get("status") || "[]");
         offlineServers = JSON.parse(await client.get("offline") || "[]");
 

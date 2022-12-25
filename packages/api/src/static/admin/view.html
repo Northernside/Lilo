@@ -23,7 +23,7 @@
     <meta property="og:image" content="https://lilo.northernsi.de/image/metabg.png">
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
+    <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lilo.northernsi.de/">
     <meta property="twitter:title" content="Lilo - Quick Server Lookup">
     <meta property="twitter:description"
@@ -44,39 +44,16 @@
     </div>
     <div class="container">
         <div class="title">
-            <p class="header">Mute a server</p>
+            <p class="header">View Server Settings</p>
         </div>
         <div class="bar" style="margin-bottom: 10px;">
             <div class="bar-input">
-                <form onsubmit="muteServer(document.getElementsByClassName('input')[0].value);">
-                    <input type="text" class="input" autocomplete="off" placeholder="*.example.com">
+                <form
+                    onsubmit="window.location.href = `/server/${document.getElementById('serverInput').value}/settings`; return false;">
+                    <input id="serverInput" type="text" class="input" autocomplete="off" placeholder="example.com">
                 </form>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <div class="title">
-            <p class="header">Remove a server</p>
-        </div>
-        <div class="bar" style="margin-bottom: 10px;">
-            <div class="bar-input">
-                <form onsubmit="removeServer(document.getElementsByClassName('input')[1].value);">
-                    <input type="text" class="input" autocomplete="off" placeholder="example.com">
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="bar" style="margin-bottom: 10px;">
-        <form
-            onsubmit="window.location.href = `/server/${document.getElementsByClassName('input')[document.getElementsByClassName('input').length - 1].value}`; return false;">
-            <div class="bar-input">
-                <input type="text" class="input" autocomplete="off" placeholder="Search for a server">
-            </div>
-            <script>
-                let input = document.getElementsByClassName("input")[document.getElementsByClassName("input").length - 1];
-                input.focus();
-            </script>
-        </form>
     </div>
 </div>
 </body>

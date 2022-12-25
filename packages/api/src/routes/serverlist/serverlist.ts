@@ -2,7 +2,7 @@ import {defaultServerIcon} from "@core/api";
 import {client} from "@core/redis";
 import {Request, Response} from "express";
 
-export const servers = async (req: Request, res: Response) => {
+export const serverlist = async (req: Request, res: Response) => {
     const monitoredServers = JSON.parse(await client.get("status") || "[]");
 
     let servers = [];

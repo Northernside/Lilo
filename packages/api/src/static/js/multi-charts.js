@@ -61,7 +61,7 @@ function runRequest() {
 
     for (let server in filteredQuery) {
         let req = new XMLHttpRequest();
-        req.open("GET", `${/[^/]*$/.exec(document.location.href)[0].split(/[?#]/)[0]}/../${filteredQuery[server]}/stats?size=${range * 60}`, true);
+        req.open("GET", `/server/${filteredQuery[server]}/stats?size=${range * 60}`, true);
 
         req.onload = () => {
             const stats = JSON.parse(req.responseText);
