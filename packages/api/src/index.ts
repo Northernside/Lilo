@@ -26,10 +26,19 @@ export const createBlogHTML = FS.readFileSync(`${__dirname}/static/blog/create.h
     notFoundHTML = FS.readFileSync(`${__dirname}/static/404.html`, "utf-8").replace(/{favicon}/g, defaultServerIcon),
     internalServerErrorHTML = FS.readFileSync(`${__dirname}/static/500.html`, "utf-8").replace(/{favicon}/g, defaultServerIcon),
     adminHTML = FS.readFileSync(`${__dirname}/static/admin/view.html`, "utf-8"),
+    compareHTML = FS.readFileSync(`${__dirname}/static/server/compare/index.html`, "utf-8"),
+    comparingHTML = FS.readFileSync(`${__dirname}/static/server/compare/view.html`, "utf-8"),
     indexHTML = FS.readFileSync(`${__dirname}/static/index.html`, "utf-8");
 
 app.get("*/view.html", async function (req: Request, res: Response) {
     return res.status(404).send(notFoundHTML);
+});
+
+app.get("/server/compare", async function (req: Request, res: Response) {
+    if (!req.query.s)
+        return res.send(compareHTML);
+    else
+        return res.send(comparingHTML);
 });
 
 app.use(Express.static(`${__dirname}/static`));

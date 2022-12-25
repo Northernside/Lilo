@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Blog - Lilo</title>
+    <title>Comparison - Lilo</title>
     <link rel="stylesheet" href="/css/general.css" type="text/css">
-    <link rel="stylesheet" href="/css/blog.css" type="text/css">
+    <link rel="stylesheet" href="/css/server.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
-    <link rel="icon" href="{favicon}">
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="{pretty_name} - Lilo">
+    <meta name="title" content="Lilo - Comparison">
     <meta name="description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lilo.northernsi.de/">
-    <meta property="og:title" content="{pretty_name} - Lilo">
+    <meta property="og:title" content="Lilo - Comparison">
     <meta property="og:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="og:image" content="https://lilo.northernsi.de/image/metabg.png">
@@ -25,7 +24,7 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://lilo.northernsi.de/">
-    <meta property="twitter:title" content="{pretty_name} - Lilo">
+    <meta property="twitter:title" content="Lilo - Comparison">
     <meta property="twitter:description"
           content="The only tool you'll ever need to search through a database containing thousands of Minecraft servers.">
     <meta property="twitter:image" content="https://lilo.northernsi.de/image/metabg.png">
@@ -39,27 +38,20 @@
     <div class="purple-bg-bubble"></div>
 </div>
 <div class="page">
-    <div class="bar">
-        <form>
-            <div class="bar-input">
-                <input type="text" class="input" autocomplete="off" placeholder="Title">
-            </div>
-            <script>
-                let input = document.getElementsByClassName("input")[0];
-                input.focus();
-            </script>
-        </form>
+    <div class="container">
+        <div class="time-frame-selector">
+            <p id="12h" class="time-frame-btn active"
+               onclick="changeRange(12, new URLSearchParams(window.location.search).get('s').split(','))">12 hours</p>
+            <p id="24h" class="time-frame-btn"
+               onclick="changeRange(24, new URLSearchParams(window.location.search).get('s').split(','))">24 hours</p>
+            <p id="36h" class="time-frame-btn"
+               onclick="changeRange(36, new URLSearchParams(window.location.search).get('s').split(','))">36 hours</p>
+            <p id="48h" class="time-frame-btn"
+               onclick="changeRange(48, new URLSearchParams(window.location.search).get('s').split(','))">48 hours</p>
+        </div>
+        <div id="chart"></div>
+        <script type="text/javascript" src="/js/multi-charts.js"></script>
     </div>
-    <div class="bar">
-        <form>
-            <div class="bar-input">
-                <textarea class="input" autocomplete="off" placeholder="What happened?"></textarea>
-            </div>
-        </form>
-    </div>
-    <input id="submitBtn" type="button" value="Submit"
-           onclick="createBlog(document.getElementsByClassName('input')[0].value, document.getElementsByClassName('input')[1].value);">
-    <script type="text/javascript" src="/js/blog.js"></script>
 </div>
 </body>
 </html>
