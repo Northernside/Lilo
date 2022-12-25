@@ -1,3 +1,10 @@
+let serversQuery = new URLSearchParams(window.location.search).get("s").split(",");
+let filteredQuery = serversQuery.filter((item, index) => serversQuery.indexOf(item) === index);
+let queryString = "";
+for (let server in filteredQuery)
+    queryString += `${filteredQuery[server]},`;
+
+
 document.querySelector("#chart").innerHTML = "Loading data...";
 
 let range = 12,
@@ -45,16 +52,16 @@ let range = 12,
         }
     };
 
-function runRequest(servers) {
+function runRequest() {
     let run = 0;
 
     options.series = [];
     options.xaxis.categories = [];
     times = [];
 
-    for (let server in servers) {
+    for (let server in filteredQuery) {
         let req = new XMLHttpRequest();
-        req.open("GET", `${/[^/]*$/.exec(document.location.href)[0].split(/[?#]/)[0]}/../${servers[server]}/stats?size=${range * 60}`, true);
+        req.open("GET", `${/[^/]*$/.exec(document.location.href)[0].split(/[?#]/)[0]}/../${filteredQuery[server]}/stats?size=${range * 60}`, true);
 
         req.onload = () => {
             const stats = JSON.parse(req.responseText);
@@ -67,7 +74,7 @@ function runRequest(servers) {
                     times.push(stats[i].time);
             }
 
-            options.series.push({name: servers[server], data: playerCount});
+            options.series.push({name: filteredQuery[server], data: playerCount});
 
             switch (req.status) {
                 case 200:
@@ -93,22 +100,19 @@ function runRequest(servers) {
     options.xaxis.categories = times;
 }
 
-function requestLoop(servers) {
-    runRequest(servers);
-
-    setTimeout(function () {
-        requestLoop(servers);
-    }, 60000);
+function requestLoop() {
+    runRequest();
+    setTimeout(requestLoop, 2000);
 }
 
-function changeRange(newRange, servers) {
+function changeRange(newRange) {
     range = newRange;
 
     for (let element of document.getElementsByClassName("active"))
         element.classList.remove("active");
     document.getElementById(`${range}h`).classList.add("active");
 
-    runRequest(servers);
+    runRequest();
 }
 
-requestLoop(new URLSearchParams(window.location.search).get("s").split(","));
+requestLoop();
