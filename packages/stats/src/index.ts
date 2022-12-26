@@ -4,7 +4,7 @@ import {status, statusLegacy} from "minecraft-server-util";
 import dotenv from "dotenv";
 
 import {startMonitoring} from "./utils/downtime";
-import {handle, resolveStatus} from "./utils/dataHandling";
+import {handle, resolveStatus, saveData} from "./utils/dataHandling";
 
 dotenv.config();
 
@@ -35,6 +35,14 @@ export const startService = async () => {
                     await handle(host, port, statusLegacyResult);
                     await resolveStatus(host, port, offlineServers);
                 }).catch(async () => {
+                    const lastSeeen = parseInt(await client.hGet(`server:${host}:${port}`, "last_seen")) || Date.now();
+                    if (lastSeeen && Date.now() - lastSeeen > 7 * 24 * 60 * 60 * 1000) {
+                        await client.set("status", JSON.stringify(JSON.parse(await client.get("status") || "[]")
+                            .filter(server => server != `${host}:${port}`)));
+                        return await client.del(`server:${host}${port}`);
+                    }
+
+                    await saveData(host, port, {online: 0, rtt: -1});
                     await startMonitoring(host, port);
                 });
             });

@@ -35,6 +35,7 @@ export const startMonitoring = async (host: string, port: number) => {
 
                 await saveData(host, port, {players: {online: null, max: null}, roundTripLatency: null});
                 await client.hSet(serverStr, "last_data", JSON.stringify(await client.hGet(serverStr, "data")));
+                await client.hSet(serverStr, "last_seen", Date.now());
                 await client.hSet(serverStr, "data", JSON.stringify({
                     motd: {
                         html: `<span style="color: #FF0000; font-weight: bold;">OFFLINE</span>`
