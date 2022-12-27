@@ -56,7 +56,7 @@ export const startMonitoring = async (host: string, port: number) => {
                 if (!notifications.includes(`${host}:${port}`) && !notifications.includes(`*.${host}:${port}`))
                     return;
 
-                await Notifications.send(`${host}:${port} went offline...\nhttps://lilo.northernsi.de/server/${host}${port == 25565 ? "" : `:${port}`}`, true, {
+                await Notifications.send(`${host}:${port} went offline...\nhttps://lilo-lookup.deserver/${host}${port == 25565 ? "" : `:${port}`}`, true, {
                     host: host,
                     port: port
                 });

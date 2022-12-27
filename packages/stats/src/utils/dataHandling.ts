@@ -16,7 +16,7 @@ export async function resolveStatus(host: string, port: number, offlineServers: 
     if (!notifications.includes(`${host}:${port}`) && !notifications.includes(`*.${host}:${port}`))
         return;
 
-    await Notifications.send(`${host}:${port} is back online!\nhttps://lilo.northernsi.de/server/${host}${port == 25565 ? "" : `:${port}`}`, true, {host: host, port: port});
+    await Notifications.send(`${host}:${port} is back online!\nhttps://lilo-lookup.deserver/${host}${port == 25565 ? "" : `:${port}`}`, true, {host: host, port: port});
 }
 
 export const saveData = async (host: string, port: number, rawData: any) => {
