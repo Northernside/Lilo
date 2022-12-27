@@ -4,7 +4,7 @@ import Crypto from "node:crypto";
 
 export const postBlog = async (req: Request, res: Response) => {
     if (!req.body.title || !req.body.message || !req.body.time || !req.params.token || !req.cookies.id)
-        return res.send({"status": 400});
+        return res.status(400).send({"status": 400});
 
     if (!JSON.parse(await client.hGet(`discord:${req.cookies.id}`, "access_tokens"))
         .some(accessObj => accessObj.accessToken == req.cookies.access_token))

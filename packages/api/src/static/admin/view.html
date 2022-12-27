@@ -46,12 +46,16 @@
             <p class="header">View Server Settings</p>
         </div>
         <div class="bar" style="margin-bottom: 10px;">
-            <div class="bar-input">
-                <form
-                    onsubmit="window.location.href = `/server/${document.getElementById('serverInput').value}/settings`; return false;">
-                    <input id="serverInput" type="text" class="input" autocomplete="off" placeholder="example.com">
-                </form>
-            </div>
+            <form
+                onsubmit="window.location.href = `/server/${document.getElementsByClassName('input')[0].value}/settings`; return false;">
+                <div class="bar-input">
+                    <input type="text" class="input" autocomplete="off" placeholder="example.com">
+                </div>
+                <script>
+                    let input = document.getElementsByClassName("input")[0];
+                    input.focus();
+                </script>
+            </form>
         </div>
     </div>
 </div>

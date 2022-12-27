@@ -1,7 +1,7 @@
 import {client} from "@core/redis";
 import {Request, Response} from "express";
 
-export const notifications = async (req: Request, res: Response) => {
+export const visibility = async (req: Request, res: Response) => {
     if (!req.params.address || !req.params.token || !req.cookies.id || !req.body.action)
         return res.status(400).send({"status": 400});
 
@@ -12,15 +12,15 @@ export const notifications = async (req: Request, res: Response) => {
     if (!await client.exists(`server:${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`))
         return res.status(404).send({"status": 404});
 
-    const notifications = JSON.parse(await client.get("notifications") || "[]");
+    const publicServers = JSON.parse(await client.get("public") || "[]");
     switch (req.body.action) {
         case "ENABLE":
-            notifications.push(`${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`);
-            await client.set("notifications", JSON.stringify(notifications));
+            publicServers.push(`${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`);
+            await client.set("public", JSON.stringify(publicServers));
             break;
         case "DISABLE":
-            notifications.splice(notifications.indexOf(`${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`), 1);
-            await client.set("notifications", JSON.stringify(notifications));
+            publicServers.splice(publicServers.indexOf(`${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`), 1);
+            await client.set("public", JSON.stringify(publicServers));
             break;
         default:
             return res.status(400).send({"status": 400});

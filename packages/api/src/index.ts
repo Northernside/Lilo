@@ -14,10 +14,10 @@ import {postBlog} from "./routes/blog/post";
 import {callback} from "./routes/auth/callback";
 import {globalStats} from "./routes/stats/stats";
 import {randomServer} from "./routes/server/random";
-import {serverlist} from "./routes/serverlist/serverlist";
+import {notifications} from "./routes/server/settings/notifications";
 import {deleteServer} from "./routes/server/settings/delete";
 import {serverInfo} from "./routes/server/info";
-import {notifications} from "./routes/server/settings/notifications";
+import {visibility} from "./routes/server/settings/visibility";
 
 dotenv.config();
 
@@ -61,10 +61,22 @@ app.get("/server/:address/settings", async function (req: Request, res: Response
     if (!await isLoggedIn(req))
         return res.status(401).send(unauthorizedHTML);
 
-    if (!await client.exists(`server:${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`))
+    if (!await client.hExists(`server:${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`, "data"))
         return res.status(404).send(notFoundHTML);
 
-    return res.send(serverSettings);
+    let serverData = JSON.parse(await client.hGet(`server:${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`, "data")),
+        serverHTML = serverSettings;
+
+    serverHTML = serverHTML.replace(/{server_name}/g, `${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`);
+    serverHTML = serverHTML.replace(/{motd}/g, !serverData.motd.html ? serverData.motd : serverData.motd.html.replace(/\n/g, "<br>"));
+    serverHTML = serverHTML.replace(/{favicon}/g, serverData.favicon ? serverData.favicon : defaultServerIcon);
+    serverHTML = serverHTML.replace(/{latency}/g, !serverData.roundTripLatency ? "0ms" : `${serverData.roundTripLatency}ms`);
+    serverHTML = serverHTML.replace(/{version}/g, !serverData.version.name ? serverData.version.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        : serverData.version.name.replace(/</g, "&lt;").replace(/>/g, "&gt;"));
+    serverHTML = serverHTML.replace(/{version_number}/g, !serverData.version.protocol ? "" : ` (${serverData.version.protocol})`);
+    serverHTML = serverHTML.replace(/{player_count}/g, !serverData.players ? "0/0" : `${serverData.players.online}/${serverData.players.max}`);
+
+    return res.send(serverHTML);
 });
 
 app.post("/server/:address/notifications/:token", Express.json(), async function (req: Request, res: Response) {
@@ -72,6 +84,13 @@ app.post("/server/:address/notifications/:token", Express.json(), async function
         return res.status(401).send(unauthorizedHTML);
 
     await notifications(req, res);
+});
+
+app.post("/server/:address/visibility/:token", Express.json(), async function (req: Request, res: Response) {
+    if (!await isLoggedIn(req))
+        return res.status(401).send(unauthorizedHTML);
+
+    await visibility(req, res);
 });
 
 app.delete("/server/:address/delete/:token", Express.json(), async function (req: Request, res: Response) {
@@ -126,10 +145,6 @@ app.get("/auth/callback", async function (req: Request, res: Response) {
 
 app.get("/api/server/random", async function (req: Request, res: Response) {
     await randomServer(req, res);
-});
-
-app.get("/api/servers", async function (req: Request, res: Response) {
-    await serverlist(req, res)
 });
 
 app.get("*", async function (req: Request, res: Response) {

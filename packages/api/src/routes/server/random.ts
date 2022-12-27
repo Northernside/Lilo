@@ -3,8 +3,8 @@ import {client} from "@core/redis";
 import {Request, Response} from "express";
 
 export const randomServer = async (req: Request, res: Response) => {
-    const monitoredServers = JSON.parse(await client.get("status") || "[]"),
-        selectedServer = monitoredServers[Math.floor(Math.random() * monitoredServers.length)],
+    const publicServers = JSON.parse(await client.get("public") || `["hypixel.net:25565"]`),
+        selectedServer = publicServers[Math.floor(Math.random() * publicServers.length)],
         host = selectedServer.split(":")[0],
         port = selectedServer.split(":")[1],
         serverData = JSON.parse(await client.hGet(`server:${selectedServer}`, "data"));

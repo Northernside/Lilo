@@ -6,6 +6,7 @@ export const serverInfo = async (req: Request, res: Response) => {
         port = parseInt(req.params.address.split(":")[1]) || 25565;
 
     return res.send({
-        notifications: JSON.parse(await client.get("notifications") || "[]").includes(`${host}:${port}`)
+        notifications: JSON.parse(await client.get("notifications") || "[]").includes(`${host}:${port}`),
+        public: JSON.parse(await client.get("public") || "[]").includes(`${host}:${port}`)
     });
 }
