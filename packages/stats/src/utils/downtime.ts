@@ -37,13 +37,13 @@ export const startMonitoring = async (serverStr: string) => {
                 console.log(`[Downtime] ${serverStr}`);
 
                 await saveData(serverStr, {players: {online: 0, max: 0}, roundTripLatency: -1});
-                await client.hSet(serverStr, "last_data", JSON.stringify(await client.hGet(serverStr, "data")));
-                await client.hSet(serverStr, "last_seen", Date.now());
-                await client.hSet(serverStr, "data", JSON.stringify({
+                await client.hSet(`server:${serverStr}`, "last_data", JSON.stringify(await client.hGet(`server:${serverStr}`, "data")));
+                await client.hSet(`server:${serverStr}`, "last_seen", Date.now());
+                await client.hSet(`server:${serverStr}`, "data", JSON.stringify({
                     motd: {
                         html: `<span style="color: #FF0000; font-weight: bold;">OFFLINE</span>`
                     },
-                    favicon: JSON.parse(await client.hGet(serverStr, "data")).favicon,
+                    favicon: JSON.parse(await client.hGet(`server:${serverStr}`, "data")).favicon,
                     players: {
                         online: 0,
                         max: 0,
