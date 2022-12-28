@@ -10,7 +10,7 @@ export const randomServer = async (req: Request, res: Response) => {
         serverData = JSON.parse(await client.hGet(`server:${selectedServer}`, "data"));
 
     return res.send({
-        "server_name": `${host}${port != "25565" ? `:${port}` : ""}`,
+        "server_name": JSON.parse(await client.get("aliases")).filter(alias => alias.lowLevel == `${host}:${port}`)[0].topLevel,
         "motd": !serverData.motd.html ? serverData.motd : serverData.motd.html.replace(/\n/g, "<br>"),
         "favicon": serverData.favicon ? serverData.favicon : defaultServerIcon,
         "latency": !serverData.roundTripLatency ? "0ms" : `${serverData.roundTripLatency}ms`,
