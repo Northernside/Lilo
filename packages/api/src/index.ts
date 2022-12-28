@@ -19,6 +19,7 @@ import {deleteServer} from "./routes/server/settings/delete";
 import {serverInfo} from "./routes/server/info";
 import {visibility} from "./routes/server/settings/visibility";
 import {srvOrigin} from "@core/stats";
+import {mirror} from "./routes/server/settings/mirror";
 
 dotenv.config();
 
@@ -95,6 +96,13 @@ app.post("/server/:address/visibility/:token", Express.json(), async function (r
         return res.status(401).send(unauthorizedHTML);
 
     await visibility(req, res);
+});
+
+app.post("/server/:address/mirror/:token", Express.json(), async function (req: Request, res: Response) {
+    if (!await isLoggedIn(req))
+        return res.status(401).send(unauthorizedHTML);
+
+    await mirror(req, res);
 });
 
 app.delete("/server/:address/delete/:token", Express.json(), async function (req: Request, res: Response) {

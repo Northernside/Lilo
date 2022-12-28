@@ -12,7 +12,7 @@ let req = new XMLHttpRequest(),
             animations: {
                 enabled: false
             },
-            height: "100%",
+            height: "150%",
             width: "100%",
             type: "area",
             foreColor: "#fff"

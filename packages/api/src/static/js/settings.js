@@ -67,6 +67,25 @@ function publish(action) {
     }));
 }
 
+function mirror(action, address, origin) {
+    const mirrorReq = new XMLHttpRequest();
+    mirrorReq.open("POST", `/server/${address}/mirror/${getCookie("access_token")}`, true);
+    mirrorReq.setRequestHeader("Accept", "application/json");
+    mirrorReq.setRequestHeader("Content-Type", "application/json");
+
+    mirrorReq.onload = () => {
+        onLoad(mirrorReq);
+    };
+
+    mirrorReq.onerror = onError;
+
+    mirrorReq.send(JSON.stringify({
+        action: action,
+        address: address,
+        origin: origin
+    }));
+}
+
 function deleteServer() {
     const hasConfirmed = confirm("Are you sure you want to delete this server entirely from the database?");
     if (!hasConfirmed)

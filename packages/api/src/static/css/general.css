@@ -11,7 +11,7 @@
 }
 
 html {
-    background: rgb(15, 32, 39);
+    background-color: rgb(15, 32, 39);
     background: -moz-linear-gradient(90deg, rgba(15, 32, 39, 1) 0%, rgba(32, 58, 67, 1) 50%, rgba(44, 83, 100, 1) 100%);
     background: -webkit-linear-gradient(90deg, rgba(15, 32, 39, 1) 0%, rgba(32, 58, 67, 1) 50%, rgba(44, 83, 100, 1) 100%);
     background: linear-gradient(90deg, rgba(15, 32, 39, 1) 0%, rgba(32, 58, 67, 1) 50%, rgba(44, 83, 100, 1) 100%);
@@ -23,7 +23,7 @@ html {
 }
 
 body {
-    margin: 0;
+    margin: 5px;
 }
 
 .delBtn {
@@ -146,6 +146,7 @@ body {
 @media screen and (max-width: 440px) {
     .container {
         max-width: 85%;
+        font-size: 13px;
     }
 
     .time-frame-btn {

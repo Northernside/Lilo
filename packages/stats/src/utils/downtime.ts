@@ -10,12 +10,12 @@ export const startMonitoring = async (serverStr: string) => {
     const host = serverStr.split(":")[0],
         port = parseInt(serverStr.split(":")[1]),
         loop = async function () {
-            status(host, port).then(async (statusResult) => {
+            status(host, port, {timeout: 5000, enableSRV: true}).then(async (statusResult) => {
                 if (!offline)
                     await handle(serverStr, statusResult);
                 offline = false;
             }).catch(() => {
-                statusLegacy(host, port).then(async (statusLegacyResult) => {
+                statusLegacy(host, port, {timeout: 5000, enableSRV: true}).then(async (statusLegacyResult) => {
                     if (!offline)
                         await handle(serverStr, statusLegacyResult);
                     offline = false;

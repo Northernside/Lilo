@@ -8,7 +8,10 @@ export const randomServer = async (req: Request, res: Response) => {
         host = selectedServer.split(":")[0],
         port = selectedServer.split(":")[1],
         serverData = JSON.parse(await client.hGet(`server:${selectedServer}`, "data")),
-        alias = JSON.parse(await client.get("aliases")).filter(alias => alias.lowLevel == `${host}:${port}`)[0];
+        alias = JSON.parse(await client.get("aliases") || "[]").filter(alias => alias.lowLevel == `${host}:${port}`)[0];
+
+    if (!serverData)
+        return res.status(404).send({status: 404});
 
     return res.send({
         "server_name": (alias ? alias.topLevel.replace(":25565", "") : `${host}${(port == 25565 ? "" : `:${port}`)}`),
