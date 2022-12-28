@@ -25,7 +25,6 @@ export const defaultServerIcon = process.env.DEFAULT_SERVER_ICON,
     unauthorizedHTML = FS.readFileSync(`${__dirname}/static/401.html`, "utf-8").replace(/{favicon}/g, defaultServerIcon),
     notFoundHTML = FS.readFileSync(`${__dirname}/static/404.html`, "utf-8").replace(/{favicon}/g, defaultServerIcon),
     internalServerErrorHTML = FS.readFileSync(`${__dirname}/static/500.html`, "utf-8").replace(/{favicon}/g, defaultServerIcon),
-    compareHTML = FS.readFileSync(`${__dirname}/static/server/compare/index.html`, "utf-8"),
     comparingHTML = FS.readFileSync(`${__dirname}/static/server/compare/view.html`, "utf-8"),
     createBlogHTML = FS.readFileSync(`${__dirname}/static/blog/create.html`, "utf-8"),
     adminHTML = FS.readFileSync(`${__dirname}/static/admin/view.html`, "utf-8"),
@@ -37,7 +36,7 @@ app.get("*/view.html", async function (req: Request, res: Response) {
 
 app.get("/server/compare", async function (req: Request, res: Response) {
     if (!req.query.s)
-        return res.send(compareHTML);
+        return res.send(FS.readFileSync(`${__dirname}/static/server/compare/index.html`, "utf-8"));
     else
         return res.send(comparingHTML);
 });

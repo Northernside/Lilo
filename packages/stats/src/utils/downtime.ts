@@ -11,12 +11,12 @@ export const startMonitoring = async (host: string, port: number) => {
         loop = async function () {
             status(host, port).then(async (statusResult) => {
                 if (!offline)
-                    await handle(host, port, statusResult);
+                    await handle(`${host}:${port}`, statusResult);
                 offline = false;
             }).catch(() => {
                 statusLegacy(host, port).then(async (statusLegacyResult) => {
                     if (!offline)
-                        await handle(host, port, statusLegacyResult);
+                        await handle(`${host}:${port}`, statusLegacyResult);
                     offline = false;
                 }).catch(() => {
                     offline = true;
@@ -33,7 +33,7 @@ export const startMonitoring = async (host: string, port: number) => {
                 offlineServers.push({"host": host, "port": port});
                 await client.set("offline", JSON.stringify(offlineServers));
 
-                await saveData(host, port, {players: {online: 0, max: 0}, roundTripLatency: -1});
+                await saveData(`${host}:${port}`, {players: {online: 0, max: 0}, roundTripLatency: -1});
                 await client.hSet(serverStr, "last_data", JSON.stringify(await client.hGet(serverStr, "data")));
                 await client.hSet(serverStr, "last_seen", Date.now());
                 await client.hSet(serverStr, "data", JSON.stringify({
@@ -56,7 +56,7 @@ export const startMonitoring = async (host: string, port: number) => {
                 if (!notifications.includes(`${host}:${port}`) && !notifications.includes(`*.${host}:${port}`))
                     return;
 
-                await Notifications.send(`${host}:${port} went offline...\nhttps://lilo-lookup.deserver/${host}${port == 25565 ? "" : `:${port}`}`, true, {
+                await Notifications.send(`${host}:${port} went offline...\nhttps://lilo-lookup.de/server/${host}${port == 25565 ? "" : `:${port}`}`, true, {
                     host: host,
                     port: port
                 });

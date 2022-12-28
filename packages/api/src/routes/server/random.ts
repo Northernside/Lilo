@@ -3,7 +3,7 @@ import {client} from "@core/redis";
 import {Request, Response} from "express";
 
 export const randomServer = async (req: Request, res: Response) => {
-    const publicServers = JSON.parse(await client.get("public") || `["hypixel.net:25565"]`),
+    const publicServers = JSON.parse(await client.get("public") || `["mc.hypixel.net:25565"]`),
         selectedServer = publicServers[Math.floor(Math.random() * publicServers.length)],
         host = selectedServer.split(":")[0],
         port = selectedServer.split(":")[1],

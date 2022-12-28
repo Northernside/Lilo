@@ -1,11 +1,23 @@
-import {internalServerErrorHTML} from "@core/api";
+import {internalServerErrorHTML, notFoundHTML} from "@core/api";
 import {client} from "@core/redis";
 import {Request, Response} from "express";
 
 export const serverStats = async (req: Request, res: Response) => {
-    const port = parseInt(req.params.address.split(":")[1]) || 25565,
-        serverStats = JSON.parse(await client.hGet(`server:${req.params.address.split(":")[0].toLowerCase()}:${port}`, "stats")),
+    const port = parseInt(req.params.address.split(":")[1]) || 25565;
+
+    if (port > 65535 || isNaN(port))
+        return res.status(404).send(notFoundHTML);
+
+    let aliases = JSON.parse(await client.get("aliases") || "[]"),
+        serverStats;
+    
+    const host = req.params.address.split(":")[0].toLowerCase(),
         size = parseInt(req.query.size as string) || 0;
+
+    if (aliases.some(alias => alias.topLevel == `${host}:${port}`))
+        serverStats = JSON.parse(await client.hGet(`server:${aliases.filter(alias => alias.topLevel == `${host}:${port}`)[0].lowLevel}`, "stats"));
+    else
+        serverStats = JSON.parse(await client.hGet(`server:${host}:${port}`, "stats"));
 
     if (!serverStats)
         return res.status(404).send({"status": 404});

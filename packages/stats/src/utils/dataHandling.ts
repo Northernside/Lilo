@@ -1,9 +1,9 @@
 import * as Notifications from "@core/notifications";
 import {client} from "@core/redis";
 
-export const handle = async (host: string, port: number, statusResult: any) => {
-    await client.hSet(`server:${host}:${port}`, "data", JSON.stringify(statusResult));
-    await saveData(host, port, statusResult);
+export const handle = async (serverStr: string, statusResult: any) => {
+    await client.hSet(`server:${serverStr}`, "data", JSON.stringify(statusResult));
+    await saveData(serverStr, statusResult);
 }
 
 export async function resolveStatus(host: string, port: number, offlineServers: any) {
@@ -16,20 +16,22 @@ export async function resolveStatus(host: string, port: number, offlineServers: 
     if (!notifications.includes(`${host}:${port}`) && !notifications.includes(`*.${host}:${port}`))
         return;
 
-    await Notifications.send(`${host}:${port} is back online!\nhttps://lilo-lookup.deserver/${host}${port == 25565 ? "" : `:${port}`}`, true, {host: host, port: port});
+    await Notifications.send(`${host}:${port} is back online!\nhttps://lilo-lookup.de/server/${host}${port == 25565 ? "" : `:${port}`}`, true, {
+        host: host,
+        port: port
+    });
 }
 
-export const saveData = async (host: string, port: number, rawData: any) => {
+export const saveData = async (serverStr: string, rawData: any) => {
     const tzOffset = (new Date()).getTimezoneOffset() * 60000,
-        time = (new Date(Date.now() - tzOffset)).toISOString(),
-        serverStr = `server:${host}:${port}`;
+        time = (new Date(Date.now() - tzOffset)).toISOString();
 
-    let stats = JSON.parse(await client.hGet(serverStr, "stats") || "[]");
+    let stats = JSON.parse(await client.hGet(`server:${serverStr}`, "stats") || "[]");
     stats.push({
         time: time,
         online: rawData.players.online,
         rtt: rawData.roundTripLatency ? rawData.roundTripLatency : null,
     });
 
-    await client.hSet(serverStr, "stats", JSON.stringify(stats));
+    await client.hSet(`server:${serverStr}`, "stats", JSON.stringify(stats));
 }

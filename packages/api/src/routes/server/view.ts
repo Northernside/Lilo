@@ -5,30 +5,55 @@ import {status, statusLegacy} from "minecraft-server-util";
 import FS from "node:fs";
 
 export const viewServer = async (req: Request, res: Response) => {
-    let host = req.params.address.split(":")[0].toLowerCase(),
-        port = parseInt(req.params.address.split(":")[1]) || 25565;
+    const port = parseInt(req.params.address.split(":")[1]) || 25565;
 
-    let serverData = JSON.parse(await client.hGet(`server:${host}:${port}`, "data"));
     if (port > 65535 || isNaN(port))
         return res.status(404).send(notFoundHTML);
+
+    let host = req.params.address.split(":")[0].toLowerCase(),
+        aliases = JSON.parse(await client.get("aliases") || "[]"),
+        serverData;
+
+    if (aliases.some(alias => alias.topLevel == `${host}:${port}`)) {
+        serverData = JSON.parse(await client.hGet(`server:${aliases.filter(alias => alias.topLevel == `${host}:${port}`)[0].lowLevel}`, "data"));
+    } else {
+        serverData = JSON.parse(await client.hGet(`server:${host}:${port}`, "data"));
+        await handleSrv();
+    }
 
     if (serverData)
         return await displayHTML();
 
-    const serverStr = `server:${host}:${port}`;
+    let serverStr = `server:${host}:${port}`;
     status(host, port).then(async (statusResult) => {
         serverData = statusResult;
+
+        await handleSrv();
         await client.hSet(serverStr, "data", JSON.stringify(statusResult));
         return await displayHTML();
     }).catch(async () => {
         statusLegacy(host, port).then(async (statusLegacyResult) => {
             serverData = statusLegacyResult;
+
+            await handleSrv();
             await client.hSet(serverStr, "data", JSON.stringify(statusLegacyResult));
             return await displayHTML();
         }).catch(() => {
             return res.status(404).send(notFoundHTML);
         });
     });
+
+    async function handleSrv() {
+        if (serverData && serverData.srvRecord) {
+            serverStr = `server:${serverData.srvRecord.host}:${serverData.srvRecord.port}`;
+            aliases.push({
+                topLevel: `${host}:${port}`,
+                lowLevel: `${serverData.srvRecord.host}:${serverData.srvRecord.port}`
+            });
+
+            await client.set("aliases", JSON.stringify(aliases));
+        }
+    }
 
     async function displayHTML() {
         let statusServers = JSON.parse(await client.get("status") || "[]"),

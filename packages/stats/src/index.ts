@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 import {startMonitoring} from "./utils/downtime";
 import {handle, resolveStatus, saveData} from "./utils/dataHandling";
+import {srvOrigin} from "./utils/srvHandling";
 
 dotenv.config();
 
@@ -28,11 +29,20 @@ export const startService = async () => {
                 port = parseInt(statusServers[server].split(":")[1]);
 
             status(host, port).then(async (statusResult) => {
-                await handle(host, port, statusResult);
+                const srvServer = await client.hGet(`server:${statusResult.srvRecord.host}:${statusResult.srvRecord.port}`, "data");
+                if (!srvServer)
+                    await client.rename(`server:${host}:${port}`, `server:${statusResult.srvRecord.host}:${statusResult.srvRecord.port}`);
+
+                await handle(srvOrigin(host, port, statusResult.srvRecord), statusResult);
                 await resolveStatus(host, port, offlineServers);
             }).catch(() => {
                 statusLegacy(host, port).then(async (statusLegacyResult) => {
-                    await handle(host, port, statusLegacyResult);
+                    const srvServer = await client.hGet(`server:${statusLegacyResult.srvRecord.host}:${statusLegacyResult.srvRecord.port}`, "data");
+                    if (!srvServer)
+                        await client.rename(`server:${host}:${port}`, `server:${statusLegacyResult.srvRecord.host}:${statusLegacyResult.srvRecord.port}`);
+
+
+                    await handle(srvOrigin(host, port, statusLegacyResult.srvRecord), statusLegacyResult);
                     await resolveStatus(host, port, offlineServers);
                 }).catch(async () => {
                     const lastSeeen = parseInt(await client.hGet(`server:${host}:${port}`, "last_seen")) || Date.now();
@@ -42,7 +52,7 @@ export const startService = async () => {
                         return await client.del(`server:${host}${port}`);
                     }
 
-                    await saveData(host, port, {players: {online: 0, max: 0}, roundTripLatency: -1});
+                    await saveData(`${host}:${port}`, {players: {online: 0, max: 0}, roundTripLatency: -1});
                     await startMonitoring(host, port);
                 });
             });
