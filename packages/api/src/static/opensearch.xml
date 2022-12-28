@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       xsi:schemaLocation="http://a9.com/-/spec/opensearch/1.1/ ">
+    <ShortName>lilo</ShortName>
+    <Description>Search for a specific Minecraft server from a database consisting of thousands of networks
+    </Description>
+    <Url type="text/html" template="https://lilo-lookup.de/server/{searchTerms}"/>
+</OpenSearchDescription>
