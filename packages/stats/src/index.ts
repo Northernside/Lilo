@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 
 import {startMonitoring} from "./utils/downtime";
 import {handle, resolveStatus, saveData} from "./utils/dataHandling";
-import {srvOrigin} from "./utils/srvHandling";
 
 dotenv.config();
 
@@ -33,16 +32,16 @@ export const startService = async () => {
                 if (!srvServer)
                     await client.rename(`server:${host}:${port}`, `server:${statusResult.srvRecord.host}:${statusResult.srvRecord.port}`);
 
-                await handle(srvOrigin(host, port, statusResult.srvRecord), statusResult);
+                await handle(await srvOrigin(host, port), statusResult);
                 await resolveStatus(host, port, offlineServers);
             }).catch(() => {
                 statusLegacy(host, port).then(async (statusLegacyResult) => {
                     const srvServer = await client.hGet(`server:${statusLegacyResult.srvRecord.host}:${statusLegacyResult.srvRecord.port}`, "data");
-                    if (!srvServer)
+                    if (!srvServer && `${host}:${port}` != `${statusLegacyResult.srvRecord.host}:${statusLegacyResult.srvRecord.port}`)
                         await client.rename(`server:${host}:${port}`, `server:${statusLegacyResult.srvRecord.host}:${statusLegacyResult.srvRecord.port}`);
 
 
-                    await handle(srvOrigin(host, port, statusLegacyResult.srvRecord), statusLegacyResult);
+                    await handle(await srvOrigin(host, port), statusLegacyResult);
                     await resolveStatus(host, port, offlineServers);
                 }).catch(async () => {
                     const lastSeeen = parseInt(await client.hGet(`server:${host}:${port}`, "last_seen")) || Date.now();
@@ -62,4 +61,12 @@ export const startService = async () => {
     }
 
     await loop();
+}
+
+export const srvOrigin = async (host: string, port: number) => {
+    const alias = JSON.parse(await client.get("aliases")).filter(alias => alias.topLevel == `${host}:${port}`);
+
+    if (!alias || alias.length == 0)
+        return `${host}:${port}`;
+    return `${alias[0].lowLevel.split(":")[0]}:${alias[0].lowLevel.split(":")[1]}`;
 }

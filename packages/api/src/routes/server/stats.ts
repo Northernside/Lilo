@@ -20,7 +20,7 @@ export const serverStats = async (req: Request, res: Response) => {
         serverStats = JSON.parse(await client.hGet(`server:${host}:${port}`, "stats"));
 
     if (!serverStats)
-        return res.status(404).send({"status": 404});
+        return res.status(404).send({status: 404});
 
     let result = [];
     if (size > serverStats.length) {
@@ -42,7 +42,7 @@ export const serverStats = async (req: Request, res: Response) => {
     }
 
     if (port > 65535 || isNaN(port))
-        return res.status(404).send({"status": 404});
+        return res.status(404).send({status: 404});
     if (result)
         return res.send(result);
 

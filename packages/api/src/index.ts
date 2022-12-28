@@ -18,6 +18,7 @@ import {notifications} from "./routes/server/settings/notifications";
 import {deleteServer} from "./routes/server/settings/delete";
 import {serverInfo} from "./routes/server/info";
 import {visibility} from "./routes/server/settings/visibility";
+import {srvOrigin} from "@core/stats";
 
 dotenv.config();
 
@@ -60,13 +61,17 @@ app.get("/server/:address/settings", async function (req: Request, res: Response
     if (!await isLoggedIn(req))
         return res.status(401).send(unauthorizedHTML);
 
-    if (!await client.hExists(`server:${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`, "data"))
+    const host = req.params.address,
+        port = (!req.params.address.includes(":") ? 25565 : parseInt(req.params.address.split(":")[1])),
+        srvStr = await srvOrigin(host, port);
+
+    if (!await client.hExists(`server:${srvStr}`, "data"))
         return res.status(404).send(notFoundHTML);
 
-    let serverData = JSON.parse(await client.hGet(`server:${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`, "data")),
+    let serverData = JSON.parse(await client.hGet(`server:${srvStr}`, "data")),
         serverHTML = serverSettings;
 
-    serverHTML = serverHTML.replace(/{server_name}/g, `${req.params.address}${!req.params.address.includes(":") ? ":25565" : ""}`);
+    serverHTML = serverHTML.replace(/{server_name}/g, `${host}:${port}`);
     serverHTML = serverHTML.replace(/{motd}/g, !serverData.motd.html ? serverData.motd : serverData.motd.html.replace(/\n/g, "<br>"));
     serverHTML = serverHTML.replace(/{favicon}/g, serverData.favicon ? serverData.favicon : defaultServerIcon);
     serverHTML = serverHTML.replace(/{latency}/g, !serverData.roundTripLatency ? "0ms" : `${serverData.roundTripLatency}ms`);
