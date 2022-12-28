@@ -1,10 +1,11 @@
 import {defaultServerIcon} from "@core/api";
 import {client} from "@core/redis";
 import {Request, Response} from "express";
+import * as Crypto from "node:crypto";
 
 export const randomServer = async (req: Request, res: Response) => {
     const publicServers = JSON.parse(await client.get("public") || `["mc.hypixel.net:25565"]`),
-        selectedServer = publicServers[Math.floor(Math.random() * publicServers.length)],
+        selectedServer = publicServers[Crypto.randomInt(0, publicServers.length)],
         host = selectedServer.split(":")[0],
         port = selectedServer.split(":")[1],
         serverData = JSON.parse(await client.hGet(`server:${selectedServer}`, "data")),
