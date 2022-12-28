@@ -28,9 +28,6 @@ export const startService = async () => {
                 port = parseInt(statusServers[server].split(":")[1]),
                 serverStr = await srvOrigin(host, port);
 
-            console.log(`${host}:${port} 0`)
-            console.log(`${serverStr} 0`);
-
             status(host, port).then(async (statusResult) => {
                 if (statusResult.srvRecord) {
                     const srvServer = await client.exists(`server:${statusResult.srvRecord.host}:${statusResult.srvRecord.port}`);
@@ -51,9 +48,6 @@ export const startService = async () => {
                     await handle(serverStr, statusLegacyResult);
                     await resolveStatus(serverStr, offlineServers);
                 }).catch(async () => {
-                    console.log(`[Downtime-uwu] ${host}${port}`);
-                    console.log(`[Downtime-uwu] ${serverStr}`);
-                    
                     const lastSeeen = parseInt(await client.hGet(`server:${host}:${port}`, "last_seen")) || Date.now();
                     if (lastSeeen && Date.now() - lastSeeen > 7 * 24 * 60 * 60 * 1000) {
                         await client.set("status", JSON.stringify(JSON.parse(await client.get("status") || "[]")

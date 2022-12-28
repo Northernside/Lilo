@@ -34,8 +34,6 @@ export const startMonitoring = async (serverStr: string) => {
                 offlineServers.push({"host": host, "port": port});
                 await client.set("offline", JSON.stringify(offlineServers));
 
-                console.log(`[Downtime] ${serverStr}`);
-
                 await saveData(serverStr, {players: {online: 0, max: 0}, roundTripLatency: -1});
                 await client.hSet(`server:${serverStr}`, "last_data", JSON.stringify(await client.hGet(`server:${serverStr}`, "data")));
                 await client.hSet(`server:${serverStr}`, "last_seen", Date.now());
