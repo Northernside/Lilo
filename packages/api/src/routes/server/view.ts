@@ -3,6 +3,7 @@ import {client} from "@core/redis";
 import {Request, Response} from "express";
 import {status, statusLegacy} from "minecraft-server-util";
 import FS from "node:fs";
+import {srvOrigin} from "@core/stats";
 
 export const viewServer = async (req: Request, res: Response) => {
     const port = parseInt(req.params.address.split(":")[1]) || 25565;
@@ -57,10 +58,11 @@ export const viewServer = async (req: Request, res: Response) => {
 
     async function displayHTML() {
         let statusServers = JSON.parse(await client.get("status") || "[]"),
-            serverHTML = FS.readFileSync(`${__dirname}/../../static/server/view.html`, "utf-8");
+            serverHTML = FS.readFileSync(`${__dirname}/../../static/server/view.html`, "utf-8"),
+            serverStr = await srvOrigin(host, port);
 
-        if (!statusServers.includes(`${host}:${port}`)) {
-            statusServers.push(`${host}:${port}`);
+        if (!statusServers.includes(serverStr)) {
+            statusServers.push(serverStr);
             await client.set("status", JSON.stringify(statusServers));
         }
 

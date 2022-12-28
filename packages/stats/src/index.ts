@@ -25,15 +25,16 @@ export const startService = async () => {
 
         for (server in statusServers) {
             let host = statusServers[server].split(":")[0].toLowerCase(),
-                port = parseInt(statusServers[server].split(":")[1]);
+                port = parseInt(statusServers[server].split(":")[1]),
+                serverStr = await srvOrigin(host, port);
 
             status(host, port).then(async (statusResult) => {
                 const srvServer = await client.hGet(`server:${statusResult.srvRecord.host}:${statusResult.srvRecord.port}`, "data");
                 if (!srvServer)
                     await client.rename(`server:${host}:${port}`, `server:${statusResult.srvRecord.host}:${statusResult.srvRecord.port}`);
 
-                await handle(await srvOrigin(host, port), statusResult);
-                await resolveStatus(host, port, offlineServers);
+                await handle(serverStr, statusResult);
+                await resolveStatus(serverStr, offlineServers);
             }).catch(() => {
                 statusLegacy(host, port).then(async (statusLegacyResult) => {
                     const srvServer = await client.hGet(`server:${statusLegacyResult.srvRecord.host}:${statusLegacyResult.srvRecord.port}`, "data");
@@ -41,18 +42,19 @@ export const startService = async () => {
                         await client.rename(`server:${host}:${port}`, `server:${statusLegacyResult.srvRecord.host}:${statusLegacyResult.srvRecord.port}`);
 
 
-                    await handle(await srvOrigin(host, port), statusLegacyResult);
-                    await resolveStatus(host, port, offlineServers);
+                    await handle(serverStr, statusLegacyResult);
+                    await resolveStatus(serverStr, offlineServers);
                 }).catch(async () => {
                     const lastSeeen = parseInt(await client.hGet(`server:${host}:${port}`, "last_seen")) || Date.now();
                     if (lastSeeen && Date.now() - lastSeeen > 7 * 24 * 60 * 60 * 1000) {
                         await client.set("status", JSON.stringify(JSON.parse(await client.get("status") || "[]")
-                            .filter(server => server != `${host}:${port}`)));
-                        return await client.del(`server:${host}${port}`);
+                            .filter(server => server != serverStr)));
+                        await client.del(`server:${host}${port}`);
+                        return;
                     }
 
                     await saveData(`${host}:${port}`, {players: {online: 0, max: 0}, roundTripLatency: -1});
-                    await startMonitoring(host, port);
+                    await startMonitoring(serverStr);
                 });
             });
         }

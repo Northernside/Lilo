@@ -6,17 +6,20 @@ export const handle = async (serverStr: string, statusResult: any) => {
     await saveData(serverStr, statusResult);
 }
 
-export async function resolveStatus(host: string, port: number, offlineServers: any) {
+export async function resolveStatus(serverStr: string, offlineServers: any) {
+    const host = serverStr.split(":")[0],
+        port = parseInt(serverStr.split(":")[1]);
+
     if (!offlineServers.some(server => server.host == host && server.port == port))
         return;
 
     await client.set("offline", JSON.stringify(offlineServers.filter(server => server.host != host || server.port != port)));
 
     const notifications = JSON.parse(await client.get("notifications"));
-    if (!notifications.includes(`${host}:${port}`) && !notifications.includes(`*.${host}:${port}`))
+    if (!notifications.includes(serverStr) && !notifications.includes(`*.${serverStr}`))
         return;
 
-    await Notifications.send(`${host}:${port} is back online!\nhttps://lilo-lookup.de/server/${host}${port == 25565 ? "" : `:${port}`}`, true, {
+    await Notifications.send(`${serverStr} is back online!\nhttps://lilo-lookup.de/server/${host}${port == 25565 ? "" : `:${port}`}`, true, {
         host: host,
         port: port
     });

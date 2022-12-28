@@ -4,19 +4,20 @@ import {status, statusLegacy} from "minecraft-server-util";
 
 import {handle, saveData} from "./dataHandling";
 
-export const startMonitoring = async (host: string, port: number) => {
+export const startMonitoring = async (serverStr: string) => {
     let i = 0,
         offline = true;
-    const serverStr = `server:${host}:${port}`,
+    const host = serverStr.split(":")[0],
+        port = parseInt(serverStr.split(":")[1]),
         loop = async function () {
             status(host, port).then(async (statusResult) => {
                 if (!offline)
-                    await handle(`${host}:${port}`, statusResult);
+                    await handle(serverStr, statusResult);
                 offline = false;
             }).catch(() => {
                 statusLegacy(host, port).then(async (statusLegacyResult) => {
                     if (!offline)
-                        await handle(`${host}:${port}`, statusLegacyResult);
+                        await handle(serverStr, statusLegacyResult);
                     offline = false;
                 }).catch(() => {
                     offline = true;
@@ -33,7 +34,9 @@ export const startMonitoring = async (host: string, port: number) => {
                 offlineServers.push({"host": host, "port": port});
                 await client.set("offline", JSON.stringify(offlineServers));
 
-                await saveData(`${host}:${port}`, {players: {online: 0, max: 0}, roundTripLatency: -1});
+                console.log(`[Downtime] ${serverStr}`);
+
+                await saveData(serverStr, {players: {online: 0, max: 0}, roundTripLatency: -1});
                 await client.hSet(serverStr, "last_data", JSON.stringify(await client.hGet(serverStr, "data")));
                 await client.hSet(serverStr, "last_seen", Date.now());
                 await client.hSet(serverStr, "data", JSON.stringify({
@@ -53,10 +56,10 @@ export const startMonitoring = async (host: string, port: number) => {
                 }));
 
                 const notifications = JSON.parse(await client.get("notifications"));
-                if (!notifications.includes(`${host}:${port}`) && !notifications.includes(`*.${host}:${port}`))
+                if (!notifications.includes(serverStr) && !notifications.includes(`*.${serverStr}`))
                     return;
 
-                await Notifications.send(`${host}:${port} went offline...\nhttps://lilo-lookup.de/server/${host}${port == 25565 ? "" : `:${port}`}`, true, {
+                await Notifications.send(`${serverStr} went offline...\nhttps://lilo-lookup.de/server/${serverStr}`, true, {
                     host: host,
                     port: port
                 });
