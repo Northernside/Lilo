@@ -66,7 +66,9 @@ export const viewServer = async (req: Request, res: Response) => {
             await client.set("status", JSON.stringify(statusServers));
         }
 
-        serverHTML = serverHTML.replace(/{server_name}/g, `${host}${port != 25565 ? `:${port}` : ""}`);
+        serverStr = JSON.parse(await client.get("aliases")).filter(alias => alias.lowLevel == serverStr)[0].topLevel;
+
+        serverHTML = serverHTML.replace(/{server_name}/g, serverStr);
         serverHTML = serverHTML.replace(/{motd}/g, !serverData.motd.html ? serverData.motd : serverData.motd.html.replace(/\n/g, "<br>"));
         serverHTML = serverHTML.replace(/{favicon}/g, serverData.favicon ? serverData.favicon : defaultServerIcon);
         serverHTML = serverHTML.replace(/{latency}/g, !serverData.roundTripLatency ? "0ms" : `${serverData.roundTripLatency}ms`);
