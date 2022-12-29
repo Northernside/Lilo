@@ -1,5 +1,6 @@
 import {client} from "@core/redis";
 import Express, {Request, Response} from "express";
+import rateLimit from "express-rate-limit";
 import Cookies from "cookie-parser";
 import dotenv from "dotenv";
 import FS from "node:fs";
@@ -31,6 +32,18 @@ export const defaultServerIcon = process.env.DEFAULT_SERVER_ICON,
     createBlogHTML = FS.readFileSync(`${__dirname}/static/blog/create.html`, "utf-8"),
     adminHTML = FS.readFileSync(`${__dirname}/static/admin/view.html`, "utf-8"),
     serverSettings = FS.readFileSync(`${__dirname}/static/server/settings/view.html`, "utf-8");
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+app.use(limiter);
+
+app.set("trust proxy", 2);
+app.get("ip", (request, response) => response.send(request.ip));
 
 app.get("*/view.html", async function (req: Request, res: Response) {
     return res.status(404).send(notFoundHTML);
