@@ -57,7 +57,12 @@ export const startMonitoring = async (serverStr: string) => {
                 if (!notifications.includes(serverStr) && !notifications.includes(`*.${serverStr}`))
                     return;
 
-                await Notifications.send(`${serverStr} went offline...\nhttps://lilo-lookup.de/server/${serverStr}`, true, {
+                const alias = JSON.parse(await client.get("aliases")).filter(alias =>
+                        alias.lowLevel == `${host}:${port}`)[0],
+                    address = (alias ? alias.topLevel.replace(":25565", "")
+                        : `${host}${(port == 25565 ? "" : `:${port}`)}`);
+
+                await Notifications.send(`${address} went offline...\nhttps://lilo-lookup.de/server/${serverStr}`, true, {
                     host: host,
                     port: port
                 });
