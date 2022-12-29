@@ -43,7 +43,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.set("trust proxy", 2);
-app.get("ip", (request, response) => response.send(request.ip));
+app.get("/ip", (request, response) => response.send(request.ip));
 
 app.get("*/view.html", async function (req: Request, res: Response) {
     return res.status(404).send(notFoundHTML);
