@@ -34,16 +34,18 @@ export const defaultServerIcon = process.env.DEFAULT_SERVER_ICON,
     serverSettings = FS.readFileSync(`${__dirname}/static/server/settings/view.html`, "utf-8");
 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
+    windowMs: 5 * 60 * 1000,
+    max: 250,
     standardHeaders: true,
     legacyHeaders: false,
+    message: {
+        status: 429,
+        message: "Too Many Requests"
+    }
 });
 
 app.use(limiter);
-
-app.set("trust proxy", 2);
-app.get("/ip", (request, response) => response.send(request.ip));
+app.set("trust proxy", process.env.PROXY_COUNT);
 
 app.get("*/view.html", async function (req: Request, res: Response) {
     return res.status(404).send(notFoundHTML);
